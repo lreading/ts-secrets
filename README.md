@@ -14,6 +14,7 @@ const timeout = secrets.float({ name: 'TIMEOUT', required: false, default: 5.0 }
 ```
 
 ## Supported "Types"
+
 Types are in quotes, because a couple of these aren't real types, but I find myself using frequently.  For example, int vs float:  An "int" is useful in the case of defining a port number when configuring a server, whereas it's really just a "number" under the hood.  I made the distinction between ints and floats due to the way the values are parsed.
 
 - string
