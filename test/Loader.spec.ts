@@ -34,7 +34,9 @@ describe('Loader.ts', () => {
 
   describe('load', () => {
     it('should handle default and required, and get the value', () => {
-      (victim as any).handleDefaultAndRequired = jest.fn().mockReturnValue('value');
+      (victim as any).handleDefaultAndRequired = jest
+        .fn()
+        .mockReturnValue('value');
       (victim as any).getValue = jest.fn().mockReturnValue('value');
       const params = { name: 'TEST' };
       const res = (victim as any).load(params);
@@ -114,7 +116,10 @@ describe('Loader.ts', () => {
       });
 
       it('should read the contents of the file', () => {
-        expect(fs.readFileSync).toHaveBeenCalledWith(`${fileDir}/file.txt`, 'utf8');
+        expect(fs.readFileSync).toHaveBeenCalledWith(
+          `${fileDir}/file.txt`,
+          'utf8'
+        );
       });
 
       it('should return the contents of the file', () => {

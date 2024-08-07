@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "public": false,
   "scripts": {
-    "build": "npm-run-all lint audit tsc",
+    "build": "npm-run-all lint audit test tsc",
     "tsc": "tsc",
     "lint": "eslint . --ext .ts --fix",
     "audit": "pnpm audit --registry=https://registry.npmjs.org",
