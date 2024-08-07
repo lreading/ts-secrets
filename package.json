@@ -1,6 +1,6 @@
 {
   "name": "@lreading/ts-secrets",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A typescript library for loading secrets from environment variables or files",
   "main": "dist/index.js",
   "public": false,
