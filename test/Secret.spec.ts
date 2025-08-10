@@ -76,6 +76,25 @@ describe('Secret.ts', () => {
       const val = victim.float(params);
       expect(val).toBeUndefined();
     });
+
+    it('throws error for invalid string values', () => {
+      (victim as any).load = jest.fn().mockReturnValue('not-a-number');
+      const params = { name: 'INVALID_FLOAT' };
+      expect(() => victim.float(params)).toThrow('Invalid float value for secret INVALID_FLOAT: "not-a-number"');
+    });
+
+    it('throws error for empty string values', () => {
+      (victim as any).load = jest.fn().mockReturnValue('');
+      const params = { name: 'EMPTY_FLOAT' };
+      expect(() => victim.float(params)).toThrow('Invalid float value for secret EMPTY_FLOAT: ""');
+    });
+
+    it('parses scientific notation correctly', () => {
+      (victim as any).load = jest.fn().mockReturnValue('1.5e10');
+      const params = { name: 'SCIENTIFIC' };
+      const val = victim.float(params);
+      expect(val).toEqual(1.5e10);
+    });
   });
 
   describe('int', () => {
@@ -91,6 +110,53 @@ describe('Secret.ts', () => {
       const params = { name: 'empty' };
       const val = victim.int(params);
       expect(val).toBeUndefined();
+    });
+
+    it('correctly parses default integer values', () => {
+      (victim as any).load = jest.fn().mockReturnValue('3000');
+      const params = { name: 'PORT', default: '3000' };
+      const val = victim.int(params);
+      expect(val).toEqual(3000);
+      expect(val).not.toBeNaN();
+    });
+
+    it('handles default values that could be misinterpreted with radix 0', () => {
+      (victim as any).load = jest.fn().mockReturnValue('08');
+      const params = { name: 'NUM', default: '08' };
+      const val = victim.int(params);
+      expect(val).toEqual(8);
+      expect(val).not.toBeNaN();
+    });
+
+    it('throws error for invalid string values', () => {
+      (victim as any).load = jest.fn().mockReturnValue('not-a-number');
+      const params = { name: 'INVALID' };
+      expect(() => victim.int(params)).toThrow('Invalid integer value for secret INVALID: "not-a-number"');
+    });
+
+    it('parses leading numbers from mixed strings', () => {
+      (victim as any).load = jest.fn().mockReturnValue('123abc');
+      const params = { name: 'MIXED' };
+      const val = victim.int(params);
+      expect(val).toEqual(123);
+    });
+
+    it('throws error for empty string values', () => {
+      (victim as any).load = jest.fn().mockReturnValue('');
+      const params = { name: 'EMPTY' };
+      expect(() => victim.int(params)).toThrow('Invalid integer value for secret EMPTY: ""');
+    });
+
+    it('throws error for whitespace-only values', () => {
+      (victim as any).load = jest.fn().mockReturnValue('   ');
+      const params = { name: 'WHITESPACE' };
+      expect(() => victim.int(params)).toThrow('Invalid integer value for secret WHITESPACE: "   "');
+    });
+
+    it('throws error when invalid default value is used', () => {
+      (victim as any).load = jest.fn().mockReturnValue('invalid-default');
+      const params = { name: 'BAD_DEFAULT', default: 'invalid-default' };
+      expect(() => victim.int(params)).toThrow('Invalid integer value for secret BAD_DEFAULT: "invalid-default"');
     });
   });
 });

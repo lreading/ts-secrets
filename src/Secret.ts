@@ -28,13 +28,21 @@ export class Secret extends Loader {
     if (val === undefined) {
       return undefined;
     }
-    return parseFloat(val);
+    const parsed = parseFloat(val);
+    if (isNaN(parsed)) {
+      throw new Error(`Invalid float value for secret ${params.name}: "${val}"`);
+    }
+    return parsed;
   }
   int(params: SecretParams): number {
     const val = this.load(params);
     if (val === undefined) {
       return undefined;
     }
-    return parseInt(val, 0);
+    const parsed = parseInt(val, 10);
+    if (isNaN(parsed)) {
+      throw new Error(`Invalid integer value for secret ${params.name}: "${val}"`);
+    }
+    return parsed;
   }
 }
